@@ -16,7 +16,7 @@
 
 		static public function fileSearch($directory, $file, $extension = null){
 			if(is_null($extension)) {
-				$file .= '.'.___SAUCE_EXT;
+				$file .= ___SAUCE_EXT;
 			} else {
 				$file .= ".{$extention}";
 			}

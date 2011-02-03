@@ -25,7 +25,7 @@
 		}
 
 		public function matches($url) {
-			if(preg_match($this->compilePathExpression($this->path), $url, $matches) == false) {
+			if(preg_match($this->compilePathExpression($this->path), preg_replace('#[/|\\\]+#i', '/', trim($url, '\/')), $matches) == false) {
 				return false;
 			}
 
