@@ -26,18 +26,24 @@
 
 		}
 		public function get() {
-
+			throw new Exception_HTTP_NotImplemented;
 		}
 		public function post() {
-
+			throw new Exception_HTTP_NotImplemented;
 		}
 		public function put() {
-
+			throw new Exception_HTTP_NotImplemented;
 		}
 		public function delete() {
-
+			throw new Exception_HTTP_NotImplemented;
 		}
 		public function options() {
-
+			throw new Exception_HTTP_NotImplemented;
+		}
+		public function patch() {
+			throw new Exception_HTTP_NotImplemented;
+		}
+		public function trace() {
+			throw new Exception_HTTP_NotImplemented;
 		}
 	}

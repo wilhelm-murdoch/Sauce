@@ -42,6 +42,8 @@
 				}
 			}
 
+			$parameters['route'] = $this->path;
+
 			return $parameters;
 		}
 

@@ -6,4 +6,6 @@
 		public function put();
 		public function delete();
 		public function options();
+		public function patch();
+		public function trace();
 	}
