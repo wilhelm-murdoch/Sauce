@@ -6,8 +6,8 @@ RewriteBase /
 
 # Protect hidden files from being viewed
 <Files .*>
-#	Order Deny,Allow
-#	Deny From All
+	Order Deny,Allow
+	Deny From All
 </Files>
 
 # Protect application and system files from being viewed
