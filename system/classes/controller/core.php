@@ -2,8 +2,10 @@
 
 	abstract class Controller_Core implements SplObserver, SplSubject, Interface_Rest {
 		protected $observers;
-		public function __construct() {
+		protected $Request;
+		public function __construct(Sauce_Request $Request) {
 			$this->observers = array();
+			$this->Request = $Request;
 		}
 		public function attach(SplObserver $Observer) {
 			$this->observers[spl_object_hash($Observer)] = $Observer;
@@ -20,10 +22,10 @@
 
 		}
 		public function before() {
-
+			echo __METHOD__;
 		}
 		public function after() {
-
+			echo __METHOD__;
 		}
 		public function get() {
 			throw new Exception_HTTP_NotImplemented;

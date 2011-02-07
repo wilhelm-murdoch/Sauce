@@ -2,8 +2,21 @@
 
 	class Sauce_Request implements Interface_Singleton, Interface_Factory {
 		static private $instance = null;
+		const __HTTP_GET = 'GET';
+		const __HTTP_PUT= 'PUT';
+		const __HTTP_POST = 'POST';
+		const __HTTP_DELETE = 'DELETE';
+		const __HTTP_OPTIONS = 'OPTIONS';
+		const __HTTP_TRACE = 'TRACE';
+		const __HTTP_PATCH = 'PATCH';
 		static private $permittedHttpMethods = array (
-			'GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'TRACE', 'PATCH'
+			self::__HTTP_GET, 
+			self::__HTTP_PUT,
+			self::__HTTP_POST,
+			self::__HTTP_DELETE,
+			self::__HTTP_OPTIONS,
+			self::__HTTP_TRACE,
+			self::__HTTP_PATCH
 		);
 
 		public static $responses = array(
@@ -55,20 +68,32 @@
 			509 => 'Bandwidth Limit Exceeded'
 		);
 
-		protected static $method = 'GET';
-		protected static $status = 200;
+		protected $uri;
+		protected $method;
+		protected $status;
+		protected $controller;
+		protected $action;
+		public $parameters;
 
-		public function __construct() {
-
+		public function __construct($uri = null, $method = self::__HTTP_GET) {
+			if(in_array($method, self::$permittedHttpMethods) === false) {
+				throw new Exception_HTTP_MethodNotAllowed($method);
+			}
+			$this->uri = $uri;
+			$this->method = $method;
+			$this->statuc = 200;
+			$this->controller = null;
+			$this->action = $method;
+			$this->parameters = null;
 		}
 
-		static public function factory() {
-			return new self;
+		static public function factory($uri = null, $method = self::__HTTP_GET) {
+			return new self($uri, $method);
 		}
 
-		static public function singleton() {
+		static public function singleton($uri = null, $method = self::__HTTP_GET) {
 			if((self::$instance instanceof self) === false) {
-				return self::$instance = new self;
+				return self::$instance = new self($uri, $method);
 			}
 			return self::$instance;
 		}
@@ -81,35 +106,36 @@
 			return $this;
 		}
 
-		private function __call($method, $parameters) {
-			if(in_array($method, self::$permittedHttpMethods) === false) {
-				throw new Exception_HTTP_MethodNotAllowed($method);
+		public function execute() {
+			if(is_null($this->uri)) {
+				throw new Exception_HTTP_BadRequest('a URI to evaluate was not specified.');
 			}
 
-			if($parameters == false || isset($parameters[0]) === false) {
-				throw new Exception_HTTP_BadRequest('a route to evaluate was not specified.');
+			if(($this->parameters = Router::matchAll($this->uri)) === false) {
+				throw new Exception_HTTP_NotFound('the specified route could not be matched.');
 			}
 
-			if(($matchedRoute = Route::matchAll($parameters[0])) === false) {
-				throw new Exception_HTTP_NotFound("the specified route could not be matched.");
+			if(isset($this->parameters['controller']) === false) {
+				throw new Exception_HTTP_FailedDependency('controller not specified for route ['.$this->parameters['route'].']');
 			}
 
-			if(isset($matchedRoute['controller']) === false) {
-				throw new Exception_HTTP_FailedDependency("controller not specified for route [{$matchedRoute['route']}]");
-			}
+			$this->controller = $this->parameters['controller'];
+			$this->action = strtolower($method);
 
-			$Controller = new $matchedRoute['controller']($this);
-			$Controller->before();
-			$Controller->$method();
-			$Controller->after();
-			// does
-			echo '<pre>';
-			print_r($matchedRoute);
+			unset($this->parameters['controller'], $this->parameters['action'], $this->parameters['route']);
+
+			try {
+				$Controller = new $this->controller($this);
+				$Controller->before();
+				$Controller->{$this->method}();
+				$Controller->after();
+			} catch(Exception $Exception) {
+				// logging should go here
+				// rethrow exception
+
+				throw $Exception;
+			}
 
 			return $this;
-		}
-		
-		public function execute() {
-			echo 'executing';
 		}
 	}

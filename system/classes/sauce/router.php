@@ -1,6 +1,6 @@
 <?php
 
-	class Sauce_Route {
+	class Sauce_Router {
 		static private $routes = array();
 		private $path;
 		private $regex;
@@ -30,19 +30,23 @@
 			}
 
 			$parameters = array();
-			foreach($matches as $key => $value) {
-				if(is_int($key) === false) {
-					$parameters[$key] = $value;
+			foreach($matches as $index => $value) {
+				if(is_int($index) === false) {
+					$parameters[$index] = $value;
 				}
 			}
 
-			foreach($this->defaults as $key => $value) {
-				if(isset($parameters[$key]) === false || empty($parameters[$key])) {
-					$parameters[$key] = $value;
+			foreach($this->regex as $index => $regex) {
+				if(isset($parameters[$index]) && preg_match("#^{$regex}$#i", $parameters[$index]) == false) {
+					$parameters[$index] = null;
 				}
 			}
 
-			$parameters['route'] = $this->path;
+			foreach($this->defaults as $index => $value) {
+				if(isset($parameters[$index]) === false || empty($parameters[$index])) {
+					$parameters[$index] = $value;
+				}
+			}
 
 			return $parameters;
 		}
@@ -51,15 +55,15 @@
 			$regex = str_replace(array (
 				'\(', '\)', '\<', '\>', '(', ')', '<', '>'
 			), array (
-				'(', ')', '<', '>', '(?:', ')?', '(?P<', '>[^/.,;?\n]++)'
+				'(', ')', '<', '>', '(?:', ')?', '(?P<', '>[[:alnum:]_-]++)'
 			), preg_quote($path));
 
 			if($this->regex) {
 				foreach($this->regex as $key => $value) {
-					$regex = str_replace("<{$key}>[^/.,;?\n]++", "<{$key}>{$value}", $regex);
+					$regex = str_replace("<{$key}>[:alnum:]_-]++", "<{$key}>{$value}", $regex);
 				}
 			}
 
-			return "#^{$regex}$#uDi";
+			return "#^{$regex}$#i";
 		}
 	}
