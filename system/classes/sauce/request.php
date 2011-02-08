@@ -73,6 +73,7 @@
 		protected $status;
 		protected $controller;
 		protected $action;
+		public $result;
 		public $parameters;
 
 		public function __construct($uri = null, $method = self::__HTTP_GET) {
@@ -84,6 +85,7 @@
 			$this->statuc = 200;
 			$this->controller = null;
 			$this->action = $method;
+			$this->result = null;
 			$this->parameters = null;
 		}
 
@@ -98,12 +100,16 @@
 			return self::$instance;
 		}
 
-		static public function headers(array $headers = array()) {
+		public function headers(array $headers = array()) {
 			return $this;
 		}
 
-		static public function values(array $values = array()) {
+		public function values(array $values = array()) {
 			return $this;
+		}
+
+		public function result() {
+			return $this->result;
 		}
 
 		public function execute() {

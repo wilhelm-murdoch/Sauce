@@ -5,14 +5,14 @@
 		private $path;
 		private $regex;
 		private $defaults;
-		public function __construct($path, array $regex = array(), array $defaults = array()) {
+		public function __construct($path, array $defaults = array(), array $regex = array()) {
 			$this->path = $path;
-			$this->regex = $regex;
 			$this->defaults = $defaults;
+			$this->regex = $regex;
 		}
 
-		static public function add($path, array $regex = array(), array $defaults = array()) {
-			self::$routes[] = new self($path, $regex, $defaults);
+		static public function add($path, array $defaults = array(), array $regex = array()) {
+			self::$routes[] = new self($path, $defaults, $regex);
 		}
 
 		static public function matchAll($url) {
@@ -25,7 +25,7 @@
 		}
 
 		public function matches($url) {
-			if(preg_match($this->compilePathExpression($this->path), preg_replace('#[/|\\\]+#i', '/', trim($url, '\/')), $matches) === false) {
+			if(preg_match($this->compilePathExpression($this->path), preg_replace('#[/|\\\]+#i', '/', trim($url, '\/')), $matches) == false) {
 				return false;
 			}
 
@@ -52,18 +52,18 @@
 		}
 
 		protected function compilePathExpression($path) {
-			$regex = str_replace(array (
+			$regexString = str_replace(array (
 				'\(', '\)', '\<', '\>', '(', ')', '<', '>'
 			), array (
 				'(', ')', '<', '>', '(?:', ')?', '(?P<', '>[[:alnum:]_-]++)'
 			), preg_quote($path));
 
 			if($this->regex) {
-				foreach($this->regex as $key => $value) {
-					$regex = str_replace("<{$key}>[:alnum:]_-]++", "<{$key}>{$value}", $regex);
+				foreach($this->regex as $index => $value) {
+					$regexString = str_replace("<{$index}>[:alnum:]_-]++", "<{$index}>{$value}", $regexString);
 				}
 			}
 
-			return "#^{$regex}$#i";
+			return "#{$regexString}$#i";
 		}
 	}

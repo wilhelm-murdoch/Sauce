@@ -1,7 +1,7 @@
 <?php
 
 	class Sauce_Core {
-		const __BUILD_NAME = 'Preggo';
+		const __BUILD_NAME = 'Prego';
 		const __BUILD_VERSION = '0.1.0';
 
 		static private $fileSearchPaths = array(___SAUCE_APP_PATH, ___SAUCE_SYSTEM_PATH);

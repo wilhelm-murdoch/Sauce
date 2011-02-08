@@ -21,12 +21,8 @@
 		public function update(SplSubject $Subject) {
 
 		}
-		public function before() {
-			echo __METHOD__;
-		}
-		public function after() {
-			echo __METHOD__;
-		}
+		public function before() {}
+		public function after() {}
 		public function get() {
 			throw new Exception_HTTP_NotImplemented;
 		}
