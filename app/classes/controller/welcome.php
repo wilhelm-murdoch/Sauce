@@ -5,6 +5,5 @@
 			parent::__construct($Request);
 		}
 		public function get() {
-			$this->Request->result = 'welcome';
 		}
 	}

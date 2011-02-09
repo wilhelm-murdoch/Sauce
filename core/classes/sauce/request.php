@@ -2,13 +2,15 @@
 
 	class Sauce_Request implements Interface_Singleton, Interface_Factory {
 		static private $instance = null;
-		const __HTTP_GET = 'GET';
-		const __HTTP_PUT= 'PUT';
-		const __HTTP_POST = 'POST';
-		const __HTTP_DELETE = 'DELETE';
+
+		const __HTTP_GET     = 'GET';
+		const __HTTP_PUT     = 'PUT';
+		const __HTTP_POST    = 'POST';
+		const __HTTP_DELETE  = 'DELETE';
 		const __HTTP_OPTIONS = 'OPTIONS';
-		const __HTTP_TRACE = 'TRACE';
-		const __HTTP_PATCH = 'PATCH';
+		const __HTTP_TRACE   = 'TRACE';
+		const __HTTP_PATCH   = 'PATCH';
+
 		static private $permittedHttpMethods = array (
 			self::__HTTP_GET, 
 			self::__HTTP_PUT,
@@ -136,9 +138,6 @@
 				$Controller->{$this->method}();
 				$Controller->after();
 			} catch(Exception $Exception) {
-				// logging should go here
-				// rethrow exception
-
 				throw $Exception;
 			}
 
