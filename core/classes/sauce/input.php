@@ -62,7 +62,7 @@
 		}
 
 		/**
-		 * Adds a new file path for method fileSearch to search through.
+		 * Protects against common injection attacks by converting the specified string to an escaped version. 
 		 *
 		 * @param String $directory Absolute path to the desired directory
 		 * @author Daniel Wilhelm II Murdoch <wilhelm.murdoch@gmail.com>
