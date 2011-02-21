@@ -11,5 +11,6 @@
 	try {
 		echo $Request = Request::singleton('welcome')->execute()->result();
 	} catch(Exception $Exception) {
+		echo '<pre>';
 		echo $Exception->getMessage();
 	}

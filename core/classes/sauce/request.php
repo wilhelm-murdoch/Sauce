@@ -128,7 +128,7 @@
 			}
 
 			$this->controller = $this->parameters['controller'];
-			$this->action = strtolower($method);
+			$this->action = strtolower($this->method);
 
 			unset($this->parameters['controller'], $this->parameters['action'], $this->parameters['route']);
 
