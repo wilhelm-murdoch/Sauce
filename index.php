@@ -1,5 +1,4 @@
 <?php
-
 	define('___SAUCE_APP_PATH',    realpath('app').DIRECTORY_SEPARATOR);
 	define('___SAUCE_SYSTEM_PATH', realpath('core').DIRECTORY_SEPARATOR);
 	define('___SAUCE_EXT', '.php');
